@@ -1,0 +1,31 @@
+<?
+session_start();
+$account = $_POST["account"];
+$password = $_POST["password"];
+
+
+
+$link = mysqli_connect("localhost", "root", "12345678", "manager_webfinal");
+$sql = "select * from web_user_login where account = '$account'";
+$rs = mysqli_query($link, $sql);
+
+
+if ($record = mysqli_fetch_assoc($rs)) {
+  if ($password == $record['password']) {
+
+    $_SESSION['id'] = $record['id'];
+    $_SESSION['name'] = $record['name'];
+    $_SESSION['account'] = $record['account'];
+    $_SESSION['password'] = $record['password'];
+    header('location:booked.php');
+
+  } else {
+    $error = "密碼錯誤";
+    header("location:login_manager.php?error=$error");
+  }
+} else if (mysqli_num_rows($rs) == 0) {
+  $error = "帳號不存在";
+  header("location:login_manager.php?error=$error");
+}
+
+?>
